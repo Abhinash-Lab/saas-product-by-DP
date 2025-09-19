@@ -25,7 +25,7 @@ import jwt from 'jsonwebtoken'
 
 class AuthController{
   static async registerUser(req:Request,res:Response){
-    console.log(req.body);
+    // console.log(req.body);
     if(req.body == undefined){
       res.status(400).json({
         messsage: "No Data was Sent!!"
@@ -50,7 +50,7 @@ class AuthController{
     })
   }
 
-  async loginUser(req:Request,res:Response){
+  static async loginUser(req:Request,res:Response){
     const {email,password} = req.body;
     if(!email || !password){
       res.status(400).json({
@@ -60,7 +60,7 @@ class AuthController{
     }
     const data = await User.findAll({
       where:{
-        email : "aditya@gmail.com"
+        email : email.toLowerCase()
       }
     })
     if(data.length == 0){
@@ -73,7 +73,7 @@ class AuthController{
         //token generation garne
         const token = jwt.sign({id : data[0].id},'thisisscretkey',
         {expiresIn : '5min'})
-        res.json({
+        res.status(200).json({
           token : token,
           message : "Logged In Successfully" 
         })
